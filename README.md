@@ -1,3 +1,5 @@
+<img width="1341" height="853" alt="Screenshot 2026-03-18 at 18 30 25" src="https://github.com/user-attachments/assets/80840d20-3a82-446d-882d-52bc8b3a30f0" />
+
 # Anam SDK full app example
 
 This repository contains a complete browser-based example app for the Anam SDK,
