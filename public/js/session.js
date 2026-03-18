@@ -390,7 +390,7 @@ export function createSessionController({
     }
   }
 
-  async function sendTalkMessage() {
+  function sendTalkMessage() {
     if (!state.anamClient || !state.isConnected) {
       return;
     }
@@ -401,27 +401,24 @@ export function createSessionController({
       return;
     }
 
-    const originalLabel = elements.sendButton.textContent;
-    elements.sendButton.disabled = true;
-    elements.sendButton.textContent = "Sending...";
-
     try {
-      await state.anamClient.talk(message);
+      state.anamClient.sendUserMessage(message);
+      // sendUserMessage doesn't fire MESSAGE_STREAM_EVENT_RECEIVED for the user
+      // side, so we update the transcript manually.
+      elements.userTranscript.textContent = message;
+      elements.personaTranscript.textContent = `${state.personaName} is listening…`;
       elements.messageInput.value = "";
       ui.appendEvent(
         "info",
-        "Talk command sent",
-        `Sent a message to ${state.personaName}.`
+        "Message sent",
+        `Your message was sent to ${state.personaName}.`
       );
     } catch (error) {
       ui.appendEvent(
         "error",
-        "Talk command failed",
-        error.message || "The talk command could not be sent."
+        "Message failed",
+        error.message || "The message could not be sent."
       );
-    } finally {
-      elements.sendButton.disabled = !state.isConnected;
-      elements.sendButton.textContent = originalLabel;
     }
   }
 

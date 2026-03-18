@@ -45,15 +45,22 @@ export function createUi({ elements, state, maxReconnectAttempts }) {
 
     state.eventCounter += 1;
 
+    const levelClasses = {
+      info: "border-sky-100 bg-sky-50/80",
+      warning: "border-amber-100 bg-amber-50/80",
+      error: "border-red-100 bg-red-50/80",
+    };
+
     const item = document.createElement("article");
-    item.className = "event-item";
+    item.className = `rounded-2xl border p-4 ${levelClasses[level] ?? "border-slate-100 bg-slate-50/80"}`;
     item.dataset.level = level;
 
     const meta = document.createElement("div");
-    meta.className = "event-meta";
-    meta.innerHTML = `<strong>${title}</strong><span>#${state.eventCounter}</span>`;
+    meta.className = "flex justify-between items-center gap-3 mb-2";
+    meta.innerHTML = `<strong class="text-[10px] font-extrabold uppercase tracking-widest text-slate-700">${title}</strong><span class="text-[11px] text-slate-400 tabular-nums">#${state.eventCounter}</span>`;
 
     const content = document.createElement("p");
+    content.className = "m-0 text-sm text-slate-600 leading-relaxed";
     content.textContent = message;
 
     item.append(meta, content);
@@ -124,7 +131,7 @@ export function createUi({ elements, state, maxReconnectAttempts }) {
 
     if (!messages.length) {
       const empty = document.createElement("p");
-      empty.className = "empty-state";
+      empty.className = "empty-state m-0 text-sm text-slate-400 text-center py-10";
       empty.textContent = "Start a conversation to see your chat history.";
       elements.chatHistory.append(empty);
       return;
@@ -132,14 +139,20 @@ export function createUi({ elements, state, maxReconnectAttempts }) {
 
     messages.forEach((message, index) => {
       const role = message.role === "user" ? "user" : "persona";
+      const roleCardClass = role === "user"
+        ? "border-sky-100 bg-sky-50/80"
+        : "border-violet-100 bg-violet-50/80";
+      const roleLabelClass = role === "user" ? "text-sky-500" : "text-violet-500";
+
       const item = document.createElement("article");
-      item.className = `history-item history-item-${role}`;
+      item.className = `rounded-2xl border p-4 ${roleCardClass}`;
 
       const meta = document.createElement("div");
-      meta.className = "history-meta";
-      meta.innerHTML = `<strong>${formatHistoryRole(message.role)}</strong><span>Turn ${index + 1}</span>`;
+      meta.className = "flex justify-between items-center gap-3 mb-2";
+      meta.innerHTML = `<strong class="text-[10px] font-extrabold uppercase tracking-widest ${roleLabelClass}">${formatHistoryRole(message.role)}</strong><span class="text-[11px] text-slate-400">Turn ${index + 1}</span>`;
 
       const content = document.createElement("p");
+      content.className = "m-0 text-sm text-slate-700 leading-relaxed";
       content.textContent = message.content || "";
 
       item.append(meta, content);
@@ -154,8 +167,8 @@ export function createUi({ elements, state, maxReconnectAttempts }) {
     elements.sendButton.disabled = !enabled;
     elements.messageInput.disabled = !enabled;
     elements.messageInput.placeholder = enabled
-      ? `Type a message for ${state.personaName}...`
-      : `Connect first, then type a message for ${state.personaName}...`;
+      ? `Say something to ${state.personaName}…`
+      : `Connect first, then say something to ${state.personaName}…`;
   }
 
   function updateButtons() {
@@ -213,7 +226,7 @@ export function createUi({ elements, state, maxReconnectAttempts }) {
       state.personaName = config.personaName;
       elements.appTitle.textContent = `Chat with ${state.personaName}`;
       elements.personaLabel.textContent = state.personaName;
-      elements.messageInput.placeholder = `Connect first, then type a message for ${state.personaName}...`;
+      elements.messageInput.placeholder = `Connect first, then say something to ${state.personaName}…`;
       elements.personaTranscript.textContent = getPersonaIdleText();
     }
 
