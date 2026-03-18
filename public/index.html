@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Anam SDK — Chat with Cara</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .scrollable::-webkit-scrollbar { width: 4px; }
+      .scrollable::-webkit-scrollbar-track { background: transparent; }
+      .scrollable::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 99px; }
+      .scrollable::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+    </style>
+  </head>
+
+  <body class="h-full overflow-hidden flex flex-col font-sans antialiased text-slate-900"
+    style="background: radial-gradient(ellipse 80% 40% at 50% -5%, rgba(139,92,246,0.07) 0%, transparent 65%), linear-gradient(180deg, #f8fafc 0%, #ffffff 50%, #faf8ff 100%);">
+
+    <!-- ── Navigation ─────────────────────────────────────────────── -->
+    <header class="shrink-0 h-16 z-50 bg-white/80 backdrop-blur-2xl border-b border-slate-200/60 shadow-sm shadow-slate-100/60 flex items-center">
+      <div class="w-full px-6 flex items-center gap-4">
+
+        <!-- Brand -->
+        <div class="flex items-center gap-3 shrink-0">
+          <div class="w-9 h-9 rounded-[11px] bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-300/40">
+            <svg class="w-[18px] h-[18px] text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"/>
+            </svg>
+          </div>
+          <div class="leading-none shrink-0">
+            <p class="text-sm font-extrabold text-slate-900 tracking-tight m-0">Anam SDK</p>
+            <p class="text-[10px] font-semibold text-slate-400 m-0 uppercase tracking-widest">Playground</p>
+          </div>
+        </div>
+
+        <div class="w-px h-6 bg-slate-200 shrink-0"></div>
+
+        <!-- Title -->
+        <h1 id="app-title" class="text-sm font-bold text-slate-700 m-0 shrink-0 hidden sm:block">Chat with Cara</h1>
+
+        <div class="flex-1"></div>
+
+        <!-- Status chips -->
+        <div class="flex items-center gap-2 shrink-0">
+          <span id="connection-chip" data-state="idle"
+            class="group inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200
+              data-[state=idle]:bg-slate-100 data-[state=idle]:text-slate-500 data-[state=idle]:border-slate-200
+              data-[state=connected]:bg-emerald-50 data-[state=connected]:text-emerald-700 data-[state=connected]:border-emerald-200
+              data-[state=connecting]:bg-sky-50 data-[state=connecting]:text-sky-700 data-[state=connecting]:border-sky-200
+              data-[state=error]:bg-red-50 data-[state=error]:text-red-700 data-[state=error]:border-red-200">
+            <span class="w-1.5 h-1.5 rounded-full bg-slate-400
+              group-data-[state=connected]:bg-emerald-500
+              group-data-[state=connecting]:bg-sky-400 group-data-[state=connecting]:animate-pulse
+              group-data-[state=error]:bg-red-500"></span>
+            Idle
+          </span>
+          <span id="privacy-chip" class="hidden md:inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-500 border border-slate-200">Zero data retention: off</span>
+          <span id="language-chip" class="hidden lg:inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-500 border border-slate-200">Language: default</span>
+        </div>
+
+        <div class="w-px h-6 bg-slate-200 shrink-0"></div>
+
+        <!-- Action buttons -->
+        <div class="flex items-center gap-2 shrink-0">
+          <button id="start-button"
+            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl font-bold text-sm text-white
+              bg-gradient-to-r from-violet-600 to-indigo-500
+              shadow-md shadow-violet-200/70
+              hover:shadow-lg hover:shadow-violet-300/60 hover:-translate-y-px
+              active:translate-y-0 transition-all duration-150
+              disabled:opacity-50 disabled:cursor-not-allowed disabled:translate-y-0 disabled:shadow-none">
+            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
+            </svg>
+            Start
+          </button>
+          <button id="stop-button"
+            class="px-4 py-2 rounded-xl font-bold text-sm text-slate-600
+              bg-white border border-slate-200
+              hover:bg-slate-50 hover:border-slate-300 hover:-translate-y-px
+              active:translate-y-0 transition-all duration-150
+              disabled:opacity-40 disabled:cursor-not-allowed disabled:translate-y-0"
+            disabled>
+            Stop
+          </button>
+          <button id="retry-button"
+            class="px-4 py-2 rounded-xl font-bold text-sm text-slate-500
+              bg-transparent border border-slate-200
+              hover:bg-white hover:border-slate-300 hover:-translate-y-px
+              active:translate-y-0 transition-all duration-150
+              disabled:opacity-40 disabled:cursor-not-allowed disabled:translate-y-0"
+            disabled>
+            Retry
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- ── App shell ──────────────────────────────────────────────── -->
+    <main class="flex-1 min-h-0 overflow-hidden px-5 py-5">
+      <div class="h-full grid grid-cols-[1fr_360px] xl:grid-cols-[1fr_420px] gap-5">
+
+        <!-- ── Left column: video + talk command ──────────────────── -->
+        <div class="flex flex-col gap-4 min-h-0 h-full">
+
+          <!-- Video card — grows to fill available height -->
+          <article class="flex-1 min-h-0 flex flex-col bg-white rounded-[24px] border border-slate-100 shadow-[0_2px_4px_rgba(0,0,0,0.04),0_12px_40px_rgba(0,0,0,0.07)] overflow-hidden">
+
+            <!-- Card header -->
+            <div class="shrink-0 flex items-center justify-between gap-4 px-5 pt-4 pb-3">
+              <p class="text-sm font-bold text-slate-700 m-0">Persona stream</p>
+              <button id="mute-button"
+                class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-600 border border-slate-200 bg-white
+                  hover:bg-slate-50 hover:border-slate-300 transition-all duration-150
+                  disabled:opacity-40 disabled:cursor-not-allowed"
+                disabled aria-pressed="false">
+                <svg class="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/>
+                </svg>
+                Mute mic
+              </button>
+            </div>
+
+            <!-- Video — fills remaining card height -->
+            <div class="flex-1 min-h-0 px-5 pb-3">
+              <div class="relative h-full overflow-hidden rounded-2xl bg-slate-950 ring-1 ring-white/5">
+                <div class="absolute inset-0 bg-[radial-gradient(ellipse_60%_55%_at_25%_0%,rgba(139,92,246,0.24),transparent_60%)] pointer-events-none z-[1]"></div>
+                <div class="absolute inset-0 bg-[radial-gradient(ellipse_45%_35%_at_90%_100%,rgba(79,70,229,0.2),transparent_55%)] pointer-events-none z-[1]"></div>
+
+                <div id="loading-overlay"
+                  class="hidden absolute inset-0 flex items-center justify-center bg-slate-950/70 backdrop-blur-sm z-20 text-white font-bold text-sm tracking-wide"
+                  aria-live="polite">
+                  Connecting to Anam...
+                </div>
+
+                <video id="persona-video" autoplay playsinline class="w-full h-full object-cover relative z-[2]"></video>
+              </div>
+            </div>
+
+            <!-- Status row — 4 compact tiles -->
+            <div class="shrink-0 px-5 pb-4">
+              <dl class="grid grid-cols-4 gap-2 m-0">
+                <div class="rounded-xl bg-slate-50 border border-slate-100 px-3 py-2.5">
+                  <dt class="text-[8px] font-extrabold uppercase tracking-[0.16em] text-slate-400 mb-1">Status</dt>
+                  <dd class="text-[11px] font-bold text-slate-800 m-0 truncate" id="status-text">Waiting…</dd>
+                </div>
+                <div class="rounded-xl bg-slate-50 border border-slate-100 px-3 py-2.5">
+                  <dt class="text-[8px] font-extrabold uppercase tracking-[0.16em] text-slate-400 mb-1">Mic</dt>
+                  <dd class="text-[11px] font-bold text-slate-800 m-0 truncate" id="mic-status-text">Not requested</dd>
+                </div>
+                <div class="rounded-xl bg-slate-50 border border-slate-100 px-3 py-2.5">
+                  <dt class="text-[8px] font-extrabold uppercase tracking-[0.16em] text-slate-400 mb-1">Connection</dt>
+                  <dd class="text-[11px] font-bold text-slate-800 m-0 truncate" id="connection-text">Disconnected</dd>
+                </div>
+                <div class="rounded-xl bg-slate-50 border border-slate-100 px-3 py-2.5">
+                  <dt class="text-[8px] font-extrabold uppercase tracking-[0.16em] text-slate-400 mb-1">Retries</dt>
+                  <dd class="text-[11px] font-bold text-slate-800 m-0 truncate" id="retry-count-text">0 / 2</dd>
+                </div>
+              </dl>
+            </div>
+          </article>
+
+          <!-- Talk command card — fixed height below video -->
+          <article class="shrink-0 bg-white rounded-[24px] border border-slate-100 shadow-[0_2px_4px_rgba(0,0,0,0.04),0_12px_40px_rgba(0,0,0,0.07)] p-5">
+            <div class="flex items-start gap-4">
+              <div class="flex-1 min-w-0">
+                <label class="block text-[9px] font-extrabold uppercase tracking-[0.18em] text-slate-400 mb-2" for="message-input">Your message</label>
+                <textarea
+                  id="message-input"
+                  rows="2"
+                  placeholder="Connect first, then say something to Cara…"
+                  disabled
+                  class="w-full resize-none rounded-xl border border-slate-200 bg-slate-50/70 text-slate-900 placeholder:text-slate-400 px-3.5 py-2.5 text-sm
+                    outline-none
+                    focus:border-violet-400 focus:ring-4 focus:ring-violet-100 focus:bg-white
+                    transition-all duration-150
+                    disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-slate-50"
+                ></textarea>
+              </div>
+              <div class="shrink-0 flex flex-col gap-2 pt-6">
+                <button id="send-message"
+                  class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm text-white
+                    bg-gradient-to-r from-violet-600 to-indigo-500
+                    shadow-md shadow-violet-200/70
+                    hover:shadow-lg hover:shadow-violet-300/60 hover:-translate-y-0.5
+                    active:translate-y-0 transition-all duration-150
+                    disabled:opacity-40 disabled:cursor-not-allowed disabled:translate-y-0 disabled:shadow-none
+                    whitespace-nowrap"
+                  disabled>
+                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/>
+                  </svg>
+                  Send
+                </button>
+                <p class="text-[10px] text-slate-400 text-center m-0 leading-snug">
+                  <kbd class="px-1 py-px rounded bg-slate-100 border border-slate-200 font-mono text-[9px]">↵</kbd> send
+                </p>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- ── Right column: transcript + history + events ─────────── -->
+        <div class="flex flex-col gap-4 min-h-0 h-full">
+
+          <!-- Live Transcript -->
+          <article class="shrink-0 bg-white rounded-[24px] border border-slate-100 shadow-[0_2px_4px_rgba(0,0,0,0.04),0_12px_40px_rgba(0,0,0,0.07)] p-5">
+            <p class="text-xs font-bold text-slate-700 m-0 mb-3">Live transcript</p>
+            <div class="flex flex-col gap-2">
+              <div class="rounded-xl bg-sky-50/80 border border-sky-100 px-3.5 py-3">
+                <span class="block text-[9px] font-extrabold uppercase tracking-[0.18em] text-sky-500 mb-1.5">You</span>
+                <p class="text-[13px] text-slate-700 m-0 leading-relaxed line-clamp-2" id="user-transcript">Waiting for microphone input…</p>
+              </div>
+              <div class="rounded-xl bg-violet-50/80 border border-violet-100 px-3.5 py-3">
+                <span class="block text-[9px] font-extrabold uppercase tracking-[0.18em] text-violet-500 mb-1.5" id="persona-label">Cara</span>
+                <p class="text-[13px] text-slate-700 m-0 leading-relaxed line-clamp-2" id="persona-transcript">The persona transcript will appear here.</p>
+              </div>
+            </div>
+          </article>
+
+          <!-- Conversation History — grows to fill remaining space -->
+          <article class="flex-1 min-h-0 flex flex-col bg-white rounded-[24px] border border-slate-100 shadow-[0_2px_4px_rgba(0,0,0,0.04),0_12px_40px_rgba(0,0,0,0.07)] p-5">
+            <div class="shrink-0 flex items-center justify-between gap-3 mb-3">
+              <p class="text-xs font-bold text-slate-700 m-0">Conversation history</p>
+              <button id="clear-history"
+                class="px-3 py-1.5 rounded-lg text-[11px] font-bold text-slate-500 border border-slate-200 bg-white hover:bg-slate-50 hover:border-slate-300 transition-all duration-150">
+                Clear
+              </button>
+            </div>
+            <div id="chat-history" class="scrollable flex-1 min-h-0 overflow-y-auto flex flex-col gap-2">
+              <p class="empty-state m-0 text-sm text-slate-400 text-center py-8">Start a conversation to see your chat history.</p>
+            </div>
+          </article>
+
+          <!-- App Events — compact fixed panel -->
+          <article class="shrink-0 bg-white rounded-[24px] border border-slate-100 shadow-[0_2px_4px_rgba(0,0,0,0.04),0_12px_40px_rgba(0,0,0,0.07)] p-5">
+            <p class="text-xs font-bold text-slate-700 m-0 mb-3">App events</p>
+            <div id="event-log" class="scrollable flex flex-col gap-2 max-h-[130px] overflow-y-auto" aria-live="polite">
+              <p class="empty-state m-0 text-sm text-slate-400 text-center py-4">No events yet.</p>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </main>
+
+    <script type="module" src="script.js"></script>
+  </body>
+</html>
