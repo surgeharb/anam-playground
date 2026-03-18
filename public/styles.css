@@ -1,0 +1,408 @@
+:root {
+  color-scheme: dark;
+  --bg: #08111f;
+  --bg-elevated: rgba(11, 25, 46, 0.78);
+  --bg-muted: rgba(15, 32, 58, 0.72);
+  --border: rgba(148, 163, 184, 0.22);
+  --text: #e2e8f0;
+  --text-muted: #9fb1c9;
+  --primary: #7c3aed;
+  --primary-strong: #6d28d9;
+  --secondary: #0ea5e9;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --shadow: 0 24px 80px rgba(2, 8, 23, 0.45);
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, rgba(124, 58, 237, 0.35), transparent 28%),
+    linear-gradient(180deg, #08111f 0%, #0f172a 100%);
+  color: var(--text);
+}
+
+button,
+textarea {
+  font: inherit;
+}
+
+code {
+  font-family:
+    "SFMono-Regular", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.shell {
+  width: min(1320px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 32px 0 48px;
+}
+
+.layout {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+}
+
+.left-column,
+.right-column {
+  display: grid;
+  gap: 20px;
+  align-content: start;
+}
+
+.card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(20px);
+  padding: 24px;
+}
+
+.hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-end;
+  margin-bottom: 20px;
+}
+
+.hero-copy {
+  max-width: 780px;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: #c4b5fd;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 10px;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.05;
+}
+
+h2 {
+  margin-bottom: 6px;
+  font-size: 1.15rem;
+}
+
+.hero-text,
+.section-header p,
+.help-text,
+.label,
+.empty-state,
+dt {
+  color: var(--text-muted);
+}
+
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(15, 23, 42, 0.55);
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.chip[data-state="connected"] {
+  border-color: rgba(34, 197, 94, 0.4);
+  color: #bbf7d0;
+}
+
+.chip[data-state="connecting"] {
+  border-color: rgba(14, 165, 233, 0.45);
+  color: #bae6fd;
+}
+
+.chip[data-state="error"] {
+  border-color: rgba(239, 68, 68, 0.45);
+  color: #fecaca;
+}
+
+.button {
+  border: 0;
+  border-radius: 14px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition:
+    transform 120ms ease,
+    opacity 120ms ease,
+    background 120ms ease;
+}
+
+.button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.button-primary {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  font-weight: 700;
+}
+
+.button-secondary {
+  background: rgba(148, 163, 184, 0.14);
+  color: var(--text);
+}
+
+.button-ghost {
+  background: transparent;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  color: var(--text);
+}
+
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.video-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(14, 165, 233, 0.18), transparent 35%),
+    linear-gradient(180deg, #020617, #0f172a);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  aspect-ratio: 16 / 9;
+  margin-bottom: 18px;
+}
+
+#persona-video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  background: transparent;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(2, 8, 23, 0.55);
+  color: white;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  z-index: 1;
+}
+
+.hidden {
+  display: none;
+}
+
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0;
+}
+
+.status-grid div {
+  padding: 14px;
+  border-radius: 16px;
+  background: var(--bg-muted);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+dt {
+  font-size: 0.82rem;
+  margin-bottom: 6px;
+}
+
+dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 120px;
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  background: rgba(2, 6, 23, 0.45);
+  color: var(--text);
+  padding: 14px 16px;
+}
+
+textarea:focus {
+  outline: 2px solid rgba(124, 58, 237, 0.45);
+  border-color: rgba(124, 58, 237, 0.6);
+}
+
+.panel-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.help-text {
+  font-size: 0.92rem;
+  text-align: right;
+}
+
+.transcript-stack {
+  display: grid;
+  gap: 12px;
+}
+
+.transcript-bubble {
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+.transcript-user {
+  background: rgba(14, 165, 233, 0.12);
+}
+
+.transcript-persona {
+  background: rgba(124, 58, 237, 0.14);
+}
+
+.transcript-role {
+  display: inline-block;
+  margin-bottom: 8px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #cbd5e1;
+}
+
+.chat-history,
+.event-log {
+  display: grid;
+  gap: 12px;
+  max-height: 360px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.history-item,
+.event-item {
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  padding: 14px 16px;
+  background: rgba(2, 6, 23, 0.38);
+}
+
+.history-item-user {
+  border-color: rgba(14, 165, 233, 0.28);
+}
+
+.history-item-persona {
+  border-color: rgba(34, 197, 94, 0.28);
+}
+
+.history-meta,
+.event-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 0.86rem;
+  color: var(--text-muted);
+}
+
+.event-item[data-level="warning"] {
+  border-color: rgba(245, 158, 11, 0.38);
+}
+
+.event-item[data-level="error"] {
+  border-color: rgba(239, 68, 68, 0.38);
+}
+
+.event-item[data-level="info"] {
+  border-color: rgba(14, 165, 233, 0.28);
+}
+
+@media (max-width: 1040px) {
+  .hero,
+  .section-header,
+  .panel-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .help-text {
+    text-align: left;
+  }
+}
+
+@media (max-width: 640px) {
+  .shell {
+    width: min(100% - 20px, 1320px);
+    padding-top: 20px;
+  }
+
+  .card {
+    padding: 18px;
+    border-radius: 20px;
+  }
+
+  .status-grid {
+    grid-template-columns: 1fr;
+  }
+}

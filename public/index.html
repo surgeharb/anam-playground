@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Anam SDK Full App Example</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero card">
+        <div class="hero-copy">
+          <p class="eyebrow">Anam SDK full application example</p>
+          <h1 id="app-title">Chat with Cara</h1>
+          <p class="hero-text">
+            This example follows the Anam full-app guide and combines secure
+            session token generation, live streaming, chat history, talk
+            commands, audio controls, and connection-aware UX.
+          </p>
+          <div class="hero-meta">
+            <span class="chip" id="connection-chip" data-state="idle">
+              Idle
+            </span>
+            <span class="chip" id="privacy-chip">Zero data retention: off</span>
+            <span class="chip" id="language-chip">Language: default</span>
+          </div>
+        </div>
+        <div class="hero-actions">
+          <button id="start-button" class="button button-primary">
+            Start chat
+          </button>
+          <button id="stop-button" class="button button-secondary" disabled>
+            Stop chat
+          </button>
+          <button id="retry-button" class="button button-ghost" disabled>
+            Retry connection
+          </button>
+        </div>
+      </section>
+
+      <section class="layout">
+        <div class="left-column">
+          <article class="card video-card">
+            <div class="section-header">
+              <div>
+                <h2>Persona stream</h2>
+                <p>Start the session to connect your camera-sized avatar view.</p>
+              </div>
+              <button
+                id="mute-button"
+                class="button button-ghost"
+                disabled
+                aria-pressed="false"
+              >
+                Mute mic
+              </button>
+            </div>
+
+            <div class="video-frame">
+              <div id="loading-overlay" class="overlay hidden" aria-live="polite">
+                Connecting to Anam...
+              </div>
+              <video id="persona-video" autoplay playsinline></video>
+            </div>
+
+            <dl class="status-grid">
+              <div>
+                <dt>Status</dt>
+                <dd id="status-text">Waiting to start a session.</dd>
+              </div>
+              <div>
+                <dt>Microphone</dt>
+                <dd id="mic-status-text">Not requested</dd>
+              </div>
+              <div>
+                <dt>Connection</dt>
+                <dd id="connection-text">Disconnected</dd>
+              </div>
+              <div>
+                <dt>Retries</dt>
+                <dd id="retry-count-text">0 / 2</dd>
+              </div>
+            </dl>
+          </article>
+
+          <article class="card">
+            <div class="section-header">
+              <div>
+                <h2>Talk command</h2>
+                <p>
+                  Send a typed prompt with the SDK <code>talk()</code> method
+                  while the voice session is running.
+                </p>
+              </div>
+            </div>
+
+            <label class="label" for="message-input">Message for the persona</label>
+            <textarea
+              id="message-input"
+              rows="4"
+              placeholder="Connect first, then type a message for Cara..."
+              disabled
+            ></textarea>
+            <div class="panel-actions">
+              <button id="send-message" class="button button-primary" disabled>
+                Send message
+              </button>
+              <span class="help-text">Press Enter to send, Shift+Enter for a new line.</span>
+            </div>
+          </article>
+        </div>
+
+        <div class="right-column">
+          <article class="card">
+            <div class="section-header">
+              <div>
+                <h2>Live transcript</h2>
+                <p>Realtime speech chunks from the user and persona.</p>
+              </div>
+            </div>
+
+            <div class="transcript-stack">
+              <div class="transcript-bubble transcript-user">
+                <span class="transcript-role">You</span>
+                <p id="user-transcript">Waiting for microphone input...</p>
+              </div>
+              <div class="transcript-bubble transcript-persona">
+                <span class="transcript-role" id="persona-label">Cara</span>
+                <p id="persona-transcript">The persona transcript will appear here.</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="section-header">
+              <div>
+                <h2>Conversation history</h2>
+                <p>
+                  Complete turns from <code>MESSAGE_HISTORY_UPDATED</code> are
+                  collected here.
+                </p>
+              </div>
+              <button id="clear-history" class="button button-ghost">
+                Clear panel
+              </button>
+            </div>
+
+            <div id="chat-history" class="chat-history">
+              <p class="empty-state">Start a conversation to see your chat history.</p>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="section-header">
+              <div>
+                <h2>App events</h2>
+                <p>Warnings, permission prompts, and recovery messages appear here.</p>
+              </div>
+            </div>
+            <div id="event-log" class="event-log" aria-live="polite">
+              <p class="empty-state">No events yet.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="script.js"></script>
+  </body>
+</html>
